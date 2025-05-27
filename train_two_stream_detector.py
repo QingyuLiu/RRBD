@@ -53,15 +53,15 @@ def prepare_data(dataset_path,batch_size=32,scaler_filename=None):
         scaler = joblib.load(scaler_filename)
 
     def preprocess(examples):
-        examples["residual_bias"] = [np.load(image_path)["arr_0"] for image_path in examples['residual_bias']]
-        examples["residual_bias"] = np.array(examples["residual_bias"])
-        size = examples["residual_bias"].shape
-        examples["residual_bias"] = scaler.transform(examples["residual_bias"].reshape(size[0], -1))
-        examples["residual_bias"]= torch.Tensor(examples["residual_bias"]).reshape(size)
+        examples["residual_bias_latent"] = [np.load(image_path)["arr_0"] for image_path in examples['residual_bias_latent']]
+        examples["residual_bias_latent"] = np.array(examples["residual_bias_latent"])
+        size = examples["residual_bias_latent"].shape
+        examples["residual_bias_latent"] = scaler.transform(examples["residual_bias_latent"].reshape(size[0], -1))
+        examples["residual_bias_latent"]= torch.Tensor(examples["residual_bias_latent"]).reshape(size)
 
         # images = [image.convert("RGB") for image in examples[image_column]]
-        rgb_images = [Image.open(image_path).convert("RGB") for image_path in examples['aug_img']]
-        examples["aug_img"] = [transform(image) for image in rgb_images]
+        rgb_images = [Image.open(image_path).convert("RGB") for image_path in examples['residual_bias_rgb']]
+        examples["residual_bias_rgb"] = [transform(image) for image in rgb_images]
         # examples["label"] = examples['label']
         return examples
 
